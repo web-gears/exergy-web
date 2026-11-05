@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://exergy.science/sitemap.xml
