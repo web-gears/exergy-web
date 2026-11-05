@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- Exergy - Concept 1 (Pure Launcher Icon): The Grassmann Sankey "E" -->
+  <!-- Background Canvas: Deep Graphite Charcoal -->
+  <rect width="512" height="512" fill="#0E1012" />
+  
+  <!-- Outer Structural Hairline Frame (0px corner radius) -->
+  <rect x="0.5" y="0.5" width="511" height="511" stroke="#25292E" stroke-width="1" />
+
+  <!-- Corner Alignment Crosshairs -->
+  <path d="M20 32 V20 H32 M480 20 H492 V32 M20 480 V492 H32 M492 480 V492 H480" stroke="#25292E" stroke-width="2" />
+
+  <!-- ==================== THE SANKEY "E" MONOGRAM ==================== -->
+  
+  <!-- 1. LEFT SPINE: High-Voltage Battery Source Terminal -->
+  <!-- Top Cell (Traction & Kinetic Feed) -->
+  <rect x="88" y="88" width="68" height="108" fill="#F0F2F5" />
+  <!-- Middle Cell (Aux/HVAC Feed) -->
+  <rect x="88" y="202" width="68" height="108" fill="#F0F2F5" />
+  <!-- Bottom Cell (Regeneration Collector) -->
+  <rect x="88" y="316" width="68" height="108" fill="#F0F2F5" />
+  <!-- Cell Division Seams (6px deep canvas gaps) -->
+  <rect x="88" y="196" width="68" height="6" fill="#0E1012" />
+  <rect x="88" y="310" width="68" height="6" fill="#0E1012" />
+
+  <!-- 2. TOP ARM: Traction & Aerodynamic Drag Stream (Primary Kinetic Work) -->
+  <rect x="156" y="88" width="268" height="76" fill="#D0D4D8" />
+
+  <!-- 3. KINETIC RECOVERY LINK: Generator Right-Angle Drop -->
+  <!-- 45-degree mitred junction between Traction Silver and Regen Green -->
+  <polygon points="364,164 424,164 424,220 364,280" fill="#D0D4D8" />
+  <polygon points="364,280 424,220 424,348 364,348" fill="#59A14F" />
+
+  <!-- 4. MIDDLE SINK: Climate Conditioning & Thermal Work (Steel Blue) -->
+  <rect x="156" y="218" width="176" height="52" fill="#4E79A7" />
+  <!-- Auxiliary / Elevation Accent (Ochre Amber) -->
+  <rect x="156" y="274" width="112" height="26" fill="#E19C24" />
+
+  <!-- 5. BOTTOM ARM: Regenerative Recovery Loop (Thermodynamic Recovery Green) -->
+  <!-- Runs horizontally left back into the battery terminal -->
+  <path d="M424 348 V424 H176 L156 386 L176 348 H364 Z" fill="#59A14F" />
+  <!-- Crisp Inward Terminal Mitre / Arrowhead -->
+  <polygon points="156,386 182,364 182,408" fill="#0E1012" />
+</svg>

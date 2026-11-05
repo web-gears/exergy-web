@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- Exergy - Concept 4: The Telemetry Chevron Vector -->
+  <rect width="512" height="512" fill="#0E1012" />
+  <rect x="0.5" y="0.5" width="511" height="511" stroke="#25292E" stroke-width="1" />
+  
+  <!-- Technical Blueprint Grid & Ticks -->
+  <path d="M24 36 V24 H36 M476 24 H488 V36 M24 476 V488 H36 M488 476 V488 H476" stroke="#25292E" stroke-width="1.5" />
+  
+  <!-- Header Monospace Telemetry -->
+  <text x="64" y="64" fill="#5A6068" font-family="'JetBrains Mono', 'Roboto Mono', monospace" font-size="12" font-weight="700" letter-spacing="0.14em">VECTOR: [EFFICIENCY_CHEVRON]</text>
+  <text x="448" y="64" text-anchor="end" fill="#5A6068" font-family="'JetBrains Mono', 'Roboto Mono', monospace" font-size="12" font-weight="700" letter-spacing="0.1em">GRADE: [A+]</text>
+
+  <!-- ==================== THE NESTED CHEVRONS ==================== -->
+  
+  <!-- CHEVRON 1: Trailing Inertia Base (Graphite Slate) -->
+  <polygon points="64,120 144,120 232,256 144,392 64,392 152,256" fill="#16191D" stroke="#25292E" stroke-width="1" />
+  
+  <!-- CHEVRON 2: Environmental Work (Climate Blue & Elevation Amber Split) -->
+  <!-- Upper leg: Climate HVAC (Steel Blue) -->
+  <polygon points="160,120 240,120 285,188 205,188" fill="#4E79A7" />
+  <!-- Center junction -->
+  <polygon points="205,188 285,188 328,256 248,256" fill="#D0D4D8" />
+  <!-- Lower leg: Elevation Potential (Ochre Amber) -->
+  <polygon points="248,256 328,256 285,324 205,324" fill="#E19C24" />
+  <polygon points="205,324 285,324 240,392 160,392" fill="#9B7BB8" />
+
+  <!-- CHEVRON 3: Leading Vector (Regen Recovery Green & Pure White Vanguard) -->
+  <!-- High-contrast arrowhead piercing forward -->
+  <polygon points="256,120 336,120 424,256 336,392 256,392 344,256" fill="#59A14F" />
+  <!-- High-contrast White Tip -->
+  <polygon points="344,256 424,256 448,256 368,314 344,314" fill="#F0F2F5" />
+
+  <!-- Base Telemetry Metrics -->
+  <line x1="64" y1="440" x2="448" y2="440" stroke="#25292E" stroke-width="1" />
+  <text x="64" y="468" fill="#8C929A" font-family="'JetBrains Mono', 'Roboto Mono', monospace" font-size="12" font-weight="700">14.8 kWh/100km</text>
+  <text x="256" y="468" text-anchor="middle" fill="#59A14F" font-family="'JetBrains Mono', 'Roboto Mono', monospace" font-size="12" font-weight="700">P95 EFFICIENCY</text>
+  <text x="448" y="468" text-anchor="end" fill="#F0F2F5" font-family="'JetBrains Mono', 'Roboto Mono', monospace" font-size="12" font-weight="700">6.8 km/kWh</text>
+</svg>

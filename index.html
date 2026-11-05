@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exergy — Thermodynamic EV Telemetry & Energy Attribution for AAOS & Mobile</title>
+  <meta name="description" content="Open, local-first electric vehicle telemetry for Android Automotive OS (AAOS) and mobile. Decomposes EV consumption into aerodynamic drag, tire rolling resistance, climate HVAC, and elevation potential.">
+  <link rel="canonical" href="https://exergy.science/">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://exergy.science/">
+  <meta property="og:title" content="Exergy — Thermodynamic EV Telemetry & Energy Attribution">
+  <meta property="og:description" content="Granular EV consumption, thermodynamic energy attribution, and trip telemetry for Android Automotive OS and companion mobile apps.">
+  <meta property="og:image" content="https://exergy.science/assets/images/flow-car.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://exergy.science/">
+  <meta name="twitter:title" content="Exergy — Thermodynamic EV Telemetry">
+  <meta name="twitter:description" content="Granular EV consumption, thermodynamic energy attribution, and trip telemetry for Android Automotive OS and companion mobile apps.">
+  <meta name="twitter:image" content="https://exergy.science/assets/images/flow-car.jpg">
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Exergy",
+    "operatingSystem": "Android Automotive OS, Android, iOS",
+    "applicationCategory": "AutomotiveApplication",
+    "url": "https://exergy.science",
+    "description": "Granular EV consumption, thermodynamic energy attribution, and trip telemetry for electric vehicles running Android Automotive OS.",
+    "license": "https://github.com/web-gears/exergy-web/blob/main/LICENSE"
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Background Technical Drafting Grid -->
+  <div class="drafting-grid-bg" aria-hidden="true"></div>
+
+  <!-- Real-Time Telemetry Ticker -->
+  <aside class="telemetry-ticker" aria-label="Live CAN Telemetry Stream">
+    <div class="container">
+      <div class="ticker-left">
+        <span><span class="status-dot"></span>SYS_ONLINE</span>
+        <span><span class="ticker-tag">BUS:</span> <span class="ticker-val" id="ticker-vbus">394.2 V</span></span>
+        <span><span class="ticker-tag">POWER:</span> <span class="ticker-val" id="ticker-power">21.4 kW</span></span>
+        <span><span class="ticker-tag">PACK_TEMP:</span> <span class="ticker-val" id="ticker-temp">18.2 °C</span></span>
+      </div>
+      <div class="ticker-right">
+        <span><span class="ticker-tag">DOMAIN:</span> <span class="ticker-val">exergy.science</span></span>
+        <span><span class="ticker-tag">CRYPTO:</span> <span class="ticker-val">XChaCha20-Poly1305</span></span>
+        <span><span class="ticker-tag">TARGET:</span> <span class="ticker-val">AAOS 12 / 13 / 14</span></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Global Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo-link" aria-label="Exergy Homepage">
+        <img src="/assets/logo.svg" alt="Exergy Logo" width="210" height="36">
+      </a>
+      
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#simulator" class="nav-link">Simulator</a>
+        <a href="#physics" class="nav-link">Physics Engine</a>
+        <a href="#surfaces" class="nav-link">Vehicle Screens</a>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="#privacy" class="nav-link">Privacy & E2EE</a>
+        <a href="/privacy" class="nav-link">Privacy Policy</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/web-gears/exergy-web" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-top-meta">
+          <span class="badge-hairline highlight">Android Automotive OS Native</span>
+          <span class="badge-hairline">Companion for Android & iOS</span>
+          <span class="badge-hairline">Local-First // Zero-Knowledge</span>
+        </div>
+
+        <h1 class="hero-title">Where does your EV energy actually go?</h1>
+        <p class="hero-subtitle">
+          Traditional vehicle trip computers report a single opaque average like <code>18.5 kWh/100 km</code>. 
+          Exergy reads raw vehicle bus telemetry directly from the Android Car API and attributes energy consumption to its fundamental physical and environmental causes: aerodynamic drag, tire rolling resistance, climate HVAC, and elevation work.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#simulator" class="btn btn-primary">Test Live Simulator</a>
+          <a href="#surfaces" class="btn btn-outline">Explore In-Car Screens</a>
+          <a href="https://github.com/web-gears/exergy-web" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Repository Source</a>
+        </div>
+
+        <!-- Interactive Flow Simulator Deck -->
+        <div class="flow-simulator-deck" id="simulator">
+          <div class="deck-header">
+            <div class="deck-title">
+              <span class="sink-indicator">
+                <span class="sink-bar" style="background: var(--sink-traction);"></span>
+                Thermodynamic Flow Simulator
+              </span>
+              <span class="mono-heading">// 2nd Law Grassmann Balance</span>
+            </div>
+            <div class="hero-top-meta" style="margin: 0;">
+              <span class="badge-hairline">Vehicle Mass: 2,150 kg</span>
+              <span class="badge-hairline">Cd·A: 0.68 m²</span>
+            </div>
+          </div>
+
+          <!-- Controls Grid -->
+          <div class="deck-controls">
+            <div class="control-item">
+              <label class="control-label" for="slider-speed">
+                <span>Vehicle Speed</span>
+                <span class="control-val" id="val-speed">110 km/h</span>
+              </label>
+              <input type="range" id="slider-speed" min="30" max="160" value="110" step="5">
+            </div>
+
+            <div class="control-item">
+              <label class="control-label" for="slider-temp">
+                <span>Ambient Air Temp</span>
+                <span class="control-val" id="val-temp">+5 °C</span>
+              </label>
+              <input type="range" id="slider-temp" min="-20" max="40" value="5" step="1">
+            </div>
+
+            <div class="control-item">
+              <label class="control-label" for="slider-grade">
+                <span>Road Elevation Grade</span>
+                <span class="control-val" id="val-grade">+1.5 %</span>
+              </label>
+              <input type="range" id="slider-grade" min="-6.0" max="6.0" value="1.5" step="0.5">
+            </div>
+
+            <div class="control-item">
+              <span class="control-label">
+                <span>Cabin Climate State</span>
+              </span>
+              <div class="segmented-mode-switch">
+                <button type="button" class="mode-btn" data-mode="off">OFF</button>
+                <button type="button" class="mode-btn" data-mode="eco">ECO</button>
+                <button type="button" class="mode-btn active" data-mode="comfort">COMFORT</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real-Time Sankey / Grassmann Dynamic SVG Canvas -->
+          <div class="flow-svg-container">
+            <svg id="sankey-svg" class="flow-svg" viewBox="0 0 940 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Architectural 40px Drafting Grid -->
+              <defs>
+                <pattern id="sankey-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1D2126" stroke-width="1" />
+                </pattern>
+                <marker id="arrow-regen" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                  <polygon points="0,0 8,4 0,8" fill="#59A14F" />
+                </marker>
+              </defs>
+              <rect width="940" height="380" fill="url(#sankey-grid)" />
+
+              <!-- Left Battery High-Voltage Pack Source Terminal -->
+              <rect x="20" y="80" width="16" height="200" fill="#1D2126" stroke="#25292E" stroke-width="1" />
+              <text x="24" y="70" fill="#8C929A" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">HV PACK</text>
+              <text x="28" y="185" fill="#F0F2F5" font-family="'JetBrains Mono', monospace" font-size="10" transform="rotate(-90 28 185)" letter-spacing="0.1em">GROSS BATTERY FLOW</text>
+
+              <!-- Main Gross Output Trunk Stream -->
+              <path id="stream-gross" d="M 36 180 H 220" stroke="#F0F2F5" stroke-width="42" stroke-linecap="butt" />
+
+              <!-- Mitred Branch 1: Traction Stream (Aerodynamic + Rolling) -->
+              <!-- Splits upward at 90-degree mitre -->
+              <path id="stream-traction" d="M 220 180 H 340 V 80 H 760" stroke="#D0D4D8" stroke-width="26" stroke-linejoin="miter" stroke-linecap="butt" />
+
+              <!-- Mitred Branch 2: Climate HVAC Conditioning -->
+              <path id="stream-hvac" d="M 220 180 H 420 V 160 H 760" stroke="#4E79A7" stroke-width="14" stroke-linejoin="miter" stroke-linecap="butt" />
+
+              <!-- Mitred Branch 3: Gravitational Elevation Work -->
+              <path id="stream-climb" d="M 220 180 H 500 V 240 H 760" stroke="#E19C24" stroke-width="12" stroke-linejoin="miter" stroke-linecap="butt" />
+
+              <!-- Mitred Branch 4: Low-Voltage 12V Auxiliary -->
+              <path id="stream-aux" d="M 220 180 H 580 V 300 H 760" stroke="#9B7BB8" stroke-width="6" stroke-linejoin="miter" stroke-linecap="butt" />
+
+              <!-- Regenerative Braking Loopback -->
+              <path id="stream-regen" d="M 620 95 V 350 H 120 V 220" stroke="#59A14F" stroke-width="10" stroke-linejoin="miter" fill="none" marker-end="url(#arrow-regen)" style="display: none;" />
+
+              <!-- Physical Labels on Right Terminals -->
+              <g transform="translate(775, 84)">
+                <text fill="#D0D4D8" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">TRACTION (AERO + ROLL)</text>
+                <text y="18" fill="#8C929A" font-family="'JetBrains Mono', monospace" font-size="11">Aero: <tspan id="metric-aero-kw" fill="#F0F2F5">14.2 kW</tspan> · Roll: <tspan id="metric-roll-kw" fill="#F0F2F5">3.9 kW</tspan></text>
+              </g>
+
+              <g transform="translate(775, 164)">
+                <text fill="#4E79A7" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">CLIMATE (HEAT PUMP / HVAC)</text>
+                <text y="18" fill="#8C929A" font-family="'JetBrains Mono', monospace" font-size="11">Active Load: <tspan id="metric-hvac-kw" fill="#F0F2F5">1.8 kW</tspan></text>
+              </g>
+
+              <g transform="translate(775, 244)">
+                <text fill="#E19C24" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">ELEVATION (POTENTIAL WORK)</text>
+                <text y="18" fill="#8C929A" font-family="'JetBrains Mono', monospace" font-size="11">Grade Delta: <tspan id="metric-climb-kw" fill="#F0F2F5">9.8 kW</tspan></text>
+              </g>
+
+              <g transform="translate(775, 304)">
+                <text fill="#9B7BB8" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">12V AUXILIARY (SYSTEMS)</text>
+                <text y="18" fill="#8C929A" font-family="'JetBrains Mono', monospace" font-size="11">Computers + Lights: <tspan id="metric-aux-kw" fill="#F0F2F5">0.4 kW</tspan></text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Bottom Summary Metrics Bar -->
+          <div class="deck-controls" style="margin-top: var(--spacing-md); margin-bottom: 0;">
+            <div class="control-item">
+              <span class="control-label">TOTAL NET BATTERY DISCHARGE</span>
+              <span class="comparison-metric" id="metric-gross-kw" style="font-size: 1.5rem; color: #FFFFFF;">29.7 kW</span>
+            </div>
+            <div class="control-item">
+              <span class="control-label">CURRENT INSTANTANEOUS EFFICIENCY</span>
+              <span class="comparison-metric" id="metric-kwh-100" style="font-size: 1.5rem; color: var(--sink-traction);">27.0 kWh/100 km</span>
+            </div>
+            <div class="control-item">
+              <span class="control-label">REGENERATIVE CAPTURE POWER</span>
+              <span class="comparison-metric" id="metric-regen-kw" style="font-size: 1.5rem; color: var(--sink-regen);">0.0 kW</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Problem with Opaque Averages vs Exergy's Physical Decomposition -->
+    <section id="physics">
+      <div class="container">
+        <h2 class="section-title">The flaw in the 18.5 kWh/100 km trip computer</h2>
+        <p class="section-desc">
+          When an EV trip consumes 24 kWh/100 km instead of the rated 17, typical car dashboards blame the driver. 
+          They provide zero visibility into whether the loss was caused by high aerodynamic drag from a 40 km/h headwind, cold battery preconditioning, sub-zero cabin heating, tire rolling resistance, or 800 meters of vertical mountain climb.
+        </p>
+
+        <!-- Side-by-Side Comparison Box -->
+        <div class="comparison-container">
+          <div class="comparison-col bad">
+            <div class="comparison-tag">OEM Standard Trip Computer (Opaque Aggregate)</div>
+            <div class="comparison-metric">23.8 <span style="font-size: 1rem; color: var(--text-secondary);">kWh / 100 km</span></div>
+            <p class="comparison-expl">
+              A single black-box number computed by dividing total battery discharge by distance travelled. 
+              Gives no physical explanation, no actionable insight into aerodynamic speed penalties, and no separation between vehicle propulsion and cabin thermal comfort.
+            </p>
+          </div>
+
+          <div class="comparison-col good">
+            <div class="comparison-tag">Exergy Thermodynamic Decomposition</div>
+            <div class="comparison-metric" style="color: var(--text-primary);">6 Sinks <span style="font-size: 1rem; color: var(--sink-regen);">Attributed in Real Time</span></div>
+            <p class="comparison-expl">
+              Decomposed into physical energy sinks: 12.1 kWh/100 km aero drag, 3.4 kWh/100 km tire roll, 4.8 kWh/100 km cabin heat pump, 3.2 kWh/100 km mountain pass climb, 0.3 kWh/100 km 12V bus, minus 2.1 kWh/100 km kinetic regen recaptured.
+            </p>
+          </div>
+        </div>
+
+        <!-- Attribution Equations Grid -->
+        <div class="attribution-grid" style="margin-top: var(--spacing-2xl);">
+          <div class="physics-card">
+            <div class="physics-header">
+              <span class="sink-indicator" style="color: var(--sink-traction);">
+                <span class="sink-bar" style="background: var(--sink-traction);"></span>
+                Aerodynamic Drag
+              </span>
+              <span class="mono-heading">F_aero</span>
+            </div>
+            <div class="physics-formula">P_aero = ½ · ρ(T) · C_d · A · v³</div>
+            <p class="physics-body">
+              Scales with the cube of vehicle velocity. Exergy applies continuous ambient air density corrections based on barometric pressure and outside temperature, allowing drivers to isolate headwind effects from speed increases.
+            </p>
+          </div>
+
+          <div class="physics-card">
+            <div class="physics-header">
+              <span class="sink-indicator" style="color: var(--sink-climate);">
+                <span class="sink-bar" style="background: var(--sink-climate);"></span>
+                Climate HVAC Conditioning
+              </span>
+              <span class="mono-heading">P_hvac</span>
+            </div>
+            <div class="physics-formula">P_hvac = Q_thermal / COP(T_ext, T_cabin)</div>
+            <p class="physics-body">
+              Calculates the thermal coefficient of performance (COP) of the vehicle's heat pump or PTC heater. Isolates cabin conditioning from battery thermal preconditioning, proving exactly how much winter range is lost to heating.
+            </p>
+          </div>
+
+          <div class="physics-card">
+            <div class="physics-header">
+              <span class="sink-indicator" style="color: var(--sink-climb);">
+                <span class="sink-bar" style="background: var(--sink-climb);"></span>
+                Gravitational Elevation Work
+              </span>
+              <span class="mono-heading">ΔE_pot</span>
+            </div>
+            <div class="physics-formula">P_climb = m · g · v · sin(θ)</div>
+            <p class="physics-body">
+              Attributes energy spent lifting the vehicle's mass against gravity versus potential energy stored. Separates grade climb consumption from rolling drag and calculates true round-trip descent recovery.
+            </p>
+          </div>
+
+          <div class="physics-card">
+            <div class="physics-header">
+              <span class="sink-indicator" style="color: var(--sink-regen);">
+                <span class="sink-bar" style="background: var(--sink-regen);"></span>
+                Regenerative Recovery
+              </span>
+              <span class="mono-heading">η_regen</span>
+            </div>
+            <div class="physics-formula">E_rec = η_regen · ∫ (m · a_decel · v) dt</div>
+            <p class="physics-body">
+              Directly tracks kilowatt-hours recovered back into the high-voltage pack during blended friction or one-pedal deceleration. Reports mechanical-to-chemical conversion efficiency and warns when cold battery limits braking regen.
+            </p>
+          </div>
+
+          <div class="physics-card">
+            <div class="physics-header">
+              <span class="sink-indicator" style="color: var(--sink-auxiliary);">
+                <span class="sink-bar" style="background: var(--sink-auxiliary);"></span>
+                12V Auxiliary Systems
+              </span>
+              <span class="mono-heading">P_aux</span>
+            </div>
+            <div class="physics-formula">P_aux = V_12v · I_12v + P_infotainment</div>
+            <p class="physics-body">
+              Monitors the DC-DC converter output feeding vehicle ECUs, driver assist radars, exterior lighting, sound system, and displays. Reveals parasitic consumption while driving and in stationary stop-and-go traffic.
+            </p>
+          </div>
+
+          <div class="physics-card">
+            <div class="physics-header">
+              <span class="sink-indicator" style="color: var(--sink-standby);">
+                <span class="sink-bar" style="background: var(--sink-standby);"></span>
+                Standby & Vampire Loss
+              </span>
+              <span class="mono-heading">P_standby</span>
+            </div>
+            <div class="physics-formula">E_vampire = ∫_parked (P_bms + P_telematics) dt</div>
+            <p class="physics-body">
+              Tracks high-voltage battery loss when the car is parked, asleep, or running battery thermal protection in freezing temperatures. Provides verified overnight percentage loss without guessing.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Multi-Surface In-Car & Mobile Showcase -->
+    <section id="surfaces">
+      <div class="container">
+        <h2 class="section-title">One telemetry engine across every surface</h2>
+        <p class="section-desc">
+          Designed specifically for Android Automotive OS head units (Google built-in) and companion mobile apps. 
+          Compliant with Google Play automotive driver-distraction safety rules while driving, with full engineering depth when parked or on your phone.
+        </p>
+
+        <!-- Showcase Deck -->
+        <div class="showcase-deck">
+          <div class="showcase-tabs" role="tablist">
+            <button type="button" class="showcase-tab active" data-target="panel-live" role="tab">
+              <span>01 // In-Motion Driving</span>
+              <span class="tab-sub">AAOS Head Unit Glance Meter</span>
+            </button>
+            <button type="button" class="showcase-tab" data-target="panel-flow" role="tab">
+              <span>02 // Parked Analysis (16:9)</span>
+              <span class="tab-sub">Landscape Flow & Scatter Plot</span>
+            </button>
+            <button type="button" class="showcase-tab" data-target="panel-portrait" role="tab">
+              <span>03 // Parked Portrait</span>
+              <span class="tab-sub">14.5" Vertical Centre Stack</span>
+            </button>
+            <button type="button" class="showcase-tab" data-target="panel-charging" role="tab">
+              <span>04 // DC Fast Charging</span>
+              <span class="tab-sub">350 kW Live Curve vs Nominal</span>
+            </button>
+            <button type="button" class="showcase-tab" data-target="panel-phone" role="tab">
+              <span>05 // Mobile Companion</span>
+              <span class="tab-sub">Android Compose & iOS SwiftUI</span>
+            </button>
+          </div>
+
+          <div class="showcase-content">
+            <!-- Panel 1: Live Driving -->
+            <div class="showcase-panel active" id="panel-live" role="tabpanel">
+              <div class="showcase-info">
+                <h3>Glanceable telemetry while driving</h3>
+                <p>
+                  While moving, driver distraction rules (Driver Optimization - DO) require minimal cognitive load. 
+                  Exergy displays a high-contrast bipolar power gauge (-150 kW to +300 kW), instantaneous kW sink distribution, and grade compensation delta with high-legibility tabular figures and minimum 76 dp touch targets.
+                </p>
+                <div class="showcase-specs">
+                  <div class="spec-cell">
+                    <span class="key">Target Surface</span>
+                    <span class="val">AAOS Car App Library</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Distraction Rule</span>
+                    <span class="val">DO Compliant (In-Motion)</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Refresh Rate</span>
+                    <span class="val">10 Hz CAN Bus Ingest</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Touch Minimum</span>
+                    <span class="val">76 × 76 dp</span>
+                  </div>
+                </div>
+              </div>
+              <div class="showcase-media">
+                <img src="/assets/images/live-car.jpg" alt="Exergy In-Motion Driving Glance Meter Screen on Android Automotive OS" loading="lazy">
+                <div class="media-caption">
+                  <span>IN-MOTION GLANCE METER // BIPOLAR POWER GAUGE</span>
+                  <span>AAOS NATIVE</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 2: Parked 16:9 Landscape -->
+            <div class="showcase-panel" id="panel-flow" role="tabpanel">
+              <div class="showcase-info">
+                <h3>Full thermodynamic Sankey balance in park</h3>
+                <p>
+                  Once the vehicle shifter enters PARK, Exergy transitions seamlessly into full interactive analysis mode. 
+                  Inspect the complete monthly Grassmann energy flow balance, correlation scatter plots linking efficiency directly to outdoor temperature, and historical trip efficiency ladders.
+                </p>
+                <div class="showcase-specs">
+                  <div class="spec-cell">
+                    <span class="key">Surface</span>
+                    <span class="val">Jetpack Compose Parked Activity</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Aspect Ratio</span>
+                    <span class="val">16:9 Landscape Center Screen</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Visualization</span>
+                    <span class="val">Grassmann Flow + Temp Scatter</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Database Engine</span>
+                    <span class="val">Local SQLDelight SQLite</span>
+                  </div>
+                </div>
+              </div>
+              <div class="showcase-media">
+                <img src="/assets/images/flow-car.jpg" alt="Exergy Parked 16:9 Fullscreen Grassmann Energy Flow Diagram" loading="lazy">
+                <div class="media-caption">
+                  <span>PARKED ANALYSIS // GRASSMANN SANKEY & TEMPERATURE CORRELATION</span>
+                  <span>16:9 DISPLAY</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 3: Parked Portrait -->
+            <div class="showcase-panel" id="panel-portrait" role="tabpanel">
+              <div class="showcase-info">
+                <h3>Optimized for modern vertical center consoles</h3>
+                <p>
+                  Designed specifically for portrait vehicle displays such as the 14.5" Polestar 3/4 and Volvo EX90. 
+                  Vertical flow topology stacks top navigation tabs, center-stage Sankey balance, and a dual telemetry deck for immediate visual inspection.
+                </p>
+                <div class="showcase-specs">
+                  <div class="spec-cell">
+                    <span class="key">Form Factor</span>
+                    <span class="val">Vertical Center Stack (14.5")</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Compatibility</span>
+                    <span class="val">Polestar 3 / 4, Volvo EX90</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Geometry</span>
+                    <span class="val">Strict Zero Corner Radius</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Borders</span>
+                    <span class="val">1px Hairline Scaffolding</span>
+                  </div>
+                </div>
+              </div>
+              <div class="showcase-media">
+                <img src="/assets/images/flow-car-portrait.jpg" alt="Exergy Vertical Center Stack UI on Polestar 3" loading="lazy">
+                <div class="media-caption">
+                  <span>PORTRAIT CENTER STACK // DUAL TELEMETRY DECK</span>
+                  <span>POLARIS AAOS</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 4: Fast Charging -->
+            <div class="showcase-panel" id="panel-charging" role="tabpanel">
+              <div class="showcase-info">
+                <h3>High-power charging telemetry and thermal curves</h3>
+                <p>
+                  When plugged into a 350 kW DC fast charger or AC wallbox, Exergy monitors instantaneous pack acceptance power against the vehicle's nominal OEM charging curve. 
+                  Tracks battery temperature window, cooling loop thermal draw, and grid-to-battery exergy destruction.
+                </p>
+                <div class="showcase-specs">
+                  <div class="spec-cell">
+                    <span class="key">Max DC Speed</span>
+                    <span class="val">Up to 350 kW Peak Acceptance</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Thermal Monitoring</span>
+                    <span class="val">Pack Temp Conditioning Window</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Efficiency Loss</span>
+                    <span class="val">Grid-to-Pack Exergy Destruction</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Auto-Wakeup</span>
+                    <span class="val">AAOS Garage Mode Handler</span>
+                  </div>
+                </div>
+              </div>
+              <div class="showcase-media">
+                <img src="/assets/images/charging-car.jpg" alt="Exergy DC Fast Charging Telemetry and Thermal Acceptance Curve" loading="lazy">
+                <div class="media-caption">
+                  <span>CHARGING TELEMETRY // 350 KW ACCEPTANCE & THERMAL PROFILE</span>
+                  <span>DC FAST CHARGE</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 5: Mobile Companion -->
+            <div class="showcase-panel" id="panel-phone" role="tabpanel">
+              <div class="showcase-info">
+                <h3>Deep post-trip telemetry on your phone</h3>
+                <p>
+                  Review drives from your desk or sofa without draining vehicle battery. 
+                  The companion app features a vector Sankey mode switcher (<code>FLOW | TRACE | MAP</code>), multi-channel DAQ strip charts (Power, Speed, Elevation, HVAC), and one-tap open data exports.
+                </p>
+                <div class="showcase-specs">
+                  <div class="spec-cell">
+                    <span class="key">Phone Stack</span>
+                    <span class="val">Jetpack Compose + SwiftUI</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Shared Core</span>
+                    <span class="val">Kotlin Multiplatform (KMP)</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Sync Protocol</span>
+                    <span class="val">End-to-End Encrypted Relay</span>
+                  </div>
+                  <div class="spec-cell">
+                    <span class="key">Offline Direct</span>
+                    <span class="val">In-Cabin Wi-Fi TLS 1.3</span>
+                  </div>
+                </div>
+              </div>
+              <div class="showcase-media">
+                <img src="/assets/images/flow-phone.jpg" alt="Exergy Mobile Companion App on Phone with Vector Sankey Diagram" loading="lazy">
+                <div class="media-caption">
+                  <span>COMPANION PHONE APP // VECTOR SANKEY MODE SWITCHER</span>
+                  <span>IOS & ANDROID</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Local-First & Zero-Knowledge Architecture -->
+    <section id="privacy">
+      <div class="container">
+        <h2 class="section-title">Local-first by construction. Zero account required.</h2>
+        <p class="section-desc">
+          Most connected car apps upload raw, unencrypted GPS tracks to corporate clouds to profile drivers and resell telemetry. 
+          Exergy is built on a strict zero-knowledge foundation: the vehicle is the primary data sovereign, pairing is purely optical, and sync payloads are encrypted with XChaCha20-Poly1305 before leaving the car.
+        </p>
+
+        <div class="sovereignty-grid">
+          <div class="sovereignty-card">
+            <h4>1. Zero Cloud Account</h4>
+            <p>
+              The in-vehicle app works completely without registration, email address, password, or cloud profile. 
+              The internal flash storage on your car holds the authoritative, full-resolution database.
+            </p>
+          </div>
+
+          <div class="sovereignty-card">
+            <h4>2. Optical QR Pairing</h4>
+            <p>
+              Pairing generates an ephemeral 256-bit symmetric pre-shared key (PSK) and Ed25519 keypair inside the vehicle in park. 
+              Your phone camera reads the optical QR code directly. No account server is ever involved in key exchange.
+            </p>
+          </div>
+
+          <div class="sovereignty-card">
+            <h4>3. XChaCha20-Poly1305 E2EE</h4>
+            <p>
+              All sync payloads are encrypted with XChaCha20-Poly1305 (192-bit extended nonce). 
+              Hardware-backed keys are held strictly in Android Keystore / Apple Keychain.
+            </p>
+          </div>
+
+          <div class="sovereignty-card">
+            <h4>4. Blind Mailbox Relay</h4>
+            <p>
+              When cloud sync is enabled, the relay server acts as an untrusted blind mailbox. 
+              The server cannot inspect routes, speeds, energy usage, timestamps, or vehicle VIN, and automatically purges blobs after delivery.
+            </p>
+          </div>
+
+          <div class="sovereignty-card">
+            <h4>5. In-Cabin Offline Wi-Fi</h4>
+            <p>
+              Reject the cloud completely: when your companion phone connects to the in-vehicle Wi-Fi hotspot, Exergy discovers the vehicle via mDNS and syncs over pinned TLS 1.3. 
+              Zero bytes leave the car cabin.
+            </p>
+          </div>
+
+          <div class="sovereignty-card">
+            <h4>6. Open Data Export</h4>
+            <p>
+              Your data belongs to you. Export complete 1 Hz telemetry or aggregated summaries at any time to standard CSV, structured JSON Schema, or GPX tracks with custom power extensions.
+            </p>
+          </div>
+        </div>
+
+        <!-- ASCII Architecture Schematic -->
+        <div class="crypto-diagram" aria-label="Cryptographic Pairing Protocol Flow">
+[ AAOS Car Display ]                                      [ Companion Phone ]
+(Vehicle is in PARK)                                     (Android or iOS)
+         │                                                       │
+         ▼                                                       │
+1. Generates 256-bit PSK (K_shared)                              │
+2. Generates Ephemeral Ed25519 Keypair                           │
+3. Computes Blind Mailbox ID = BLAKE3(PubKey)                    │
+4. Renders Optical QR Code:                                      │
+   exergy://pair?v=1                                             │
+   &amp;box=&lt;mailbox_id&gt;                                             │
+   &amp;k=&lt;base64_psk&gt;                                               │
+   &amp;relay=https://relay.exergy.science                           │
+         │                                                       │
+         │ ◄────────── 5. User scans QR code with camera ─────────┤
+         │                                                       │
+         │                                                       ▼
+         │                                          6. Stores K_shared securely
+         │                                             in Android Keystore /
+         │                                             iOS Keychain
+         ▼                                                       ▼
+[ Pair Confirmed on Screen ]                            [ Instant E2EE Sync Enabled ]</div>
+      </div>
+    </section>
+
+    <!-- Vehicle Compatibility Matrix -->
+    <section id="compatibility">
+      <div class="container">
+        <h2 class="section-title">Built for Google built-in (AAOS) vehicles</h2>
+        <p class="section-desc">
+          Exergy reads standard automotive properties via the Android Automotive OS Car API (<code>CarPropertyManager</code>). 
+          It supports vehicles running Android Automotive OS with Google built-in, with graceful degradation when an OEM restricts specific properties.
+        </p>
+
+        <div class="compat-table-container">
+          <table class="compat-table">
+            <thead>
+              <tr>
+                <th>OEM / Manufacturer</th>
+                <th>Supported Vehicle Models</th>
+                <th>Target OS Version</th>
+                <th>Exposed VHAL Signals</th>
+                <th>Integration Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Polestar</strong></td>
+                <td>Polestar 2, Polestar 3, Polestar 4</td>
+                <td>AAOS 11 / 12 / 13 / 14</td>
+                <td>
+                  <span class="signal-chip avail">SPEED</span>
+                  <span class="signal-chip avail">HV_BATT_V/I</span>
+                  <span class="signal-chip avail">SOC_PCT</span>
+                  <span class="signal-chip avail">EXT_TEMP</span>
+                  <span class="signal-chip avail">HVAC_LOAD</span>
+                  <span class="signal-chip avail">GEAR</span>
+                </td>
+                <td><span style="color: #71BF65; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;">TESTED & VERIFIED</span></td>
+              </tr>
+              <tr>
+                <td><strong>Volvo Cars</strong></td>
+                <td>EX30, EX90, XC40 / C40 Recharge</td>
+                <td>AAOS 11 / 12 / 13</td>
+                <td>
+                  <span class="signal-chip avail">SPEED</span>
+                  <span class="signal-chip avail">HV_BATT_V/I</span>
+                  <span class="signal-chip avail">SOC_PCT</span>
+                  <span class="signal-chip avail">EXT_TEMP</span>
+                  <span class="signal-chip avail">GEAR</span>
+                  <span class="signal-chip est">HVAC_EST ≈</span>
+                </td>
+                <td><span style="color: #71BF65; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;">TESTED & VERIFIED</span></td>
+              </tr>
+              <tr>
+                <td><strong>Renault</strong></td>
+                <td>Megane E-Tech, Scenic E-Tech</td>
+                <td>OpenR Link (AAOS 12)</td>
+                <td>
+                  <span class="signal-chip avail">SPEED</span>
+                  <span class="signal-chip avail">HV_BATT_V/I</span>
+                  <span class="signal-chip avail">SOC_PCT</span>
+                  <span class="signal-chip avail">EXT_TEMP</span>
+                  <span class="signal-chip est">HVAC_EST ≈</span>
+                </td>
+                <td><span style="color: #71BF65; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;">COMPATIBLE</span></td>
+              </tr>
+              <tr>
+                <td><strong>Ford Motor Co.</strong></td>
+                <td>Mustang Mach-E, F-150 Lightning (Digital Exp)</td>
+                <td>Ford Digital Experience</td>
+                <td>
+                  <span class="signal-chip avail">SPEED</span>
+                  <span class="signal-chip avail">HV_BATT_V/I</span>
+                  <span class="signal-chip avail">SOC_PCT</span>
+                  <span class="signal-chip avail">EXT_TEMP</span>
+                </td>
+                <td><span style="color: #71BF65; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;">COMPATIBLE</span></td>
+              </tr>
+              <tr>
+                <td><strong>General Motors</strong></td>
+                <td>Chevrolet Blazer EV, Equinox EV, Cadillac LYRIQ</td>
+                <td>Ultifi Platform (AAOS)</td>
+                <td>
+                  <span class="signal-chip avail">SPEED</span>
+                  <span class="signal-chip avail">HV_BATT_V/I</span>
+                  <span class="signal-chip avail">SOC_PCT</span>
+                  <span class="signal-chip avail">EXT_TEMP</span>
+                </td>
+                <td><span style="color: #71BF65; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;">COMPATIBLE</span></td>
+              </tr>
+              <tr>
+                <td><strong>Honda</strong></td>
+                <td>Prologue EV</td>
+                <td>Google built-in</td>
+                <td>
+                  <span class="signal-chip avail">SPEED</span>
+                  <span class="signal-chip avail">HV_BATT_V/I</span>
+                  <span class="signal-chip avail">SOC_PCT</span>
+                </td>
+                <td><span style="color: #71BF65; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;">COMPATIBLE</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Multiplatform Tech Stack & Open Source Architecture -->
+    <section id="architecture">
+      <div class="container">
+        <h2 class="section-title">Open source multiplatform engineering</h2>
+        <p class="section-desc">
+          Built with Kotlin Multiplatform (KMP). A unified shared domain model, physical thermodynamic engine, crypto envelope, and SQLDelight persistence engine powering native automotive and phone frontends.
+        </p>
+
+        <div class="arch-grid">
+          <div class="arch-box">
+            <h3>Shared KMP Core Architecture</h3>
+            <p>
+              The core module compiles to Java bytecode for Android / AAOS and native machine code (Objective-C/Swift framework) for iOS, guaranteeing identical physics attribution across all devices.
+            </p>
+            <div class="code-block">// Shared Kotlin Multiplatform Physics Engine
+val attribution = PhysicsEngine.calculate(
+    telemetry = currentSample,
+    params = vehicleParameters,
+    previousSample = lastSample
+)
+
+val pAero = attribution.aerodynamicPowerKw
+val pRoll = attribution.rollingResistanceKw
+val pClimb = attribution.elevationWorkKw
+val pNet = attribution.netBatteryPowerKw</div>
+          </div>
+
+          <div class="arch-box">
+            <h3>Automotive Flash Storage Preservation</h3>
+            <p>
+              Automotive eMMC/UFS memory has strict lifecycle write limits. Exergy batches 10 Hz high-rate CAN telemetry in volatile memory, downsamples at 1 Hz for disk commits, and applies write-ahead write mitigation.
+            </p>
+            <div class="code-block">// SQLDelight Local-First Persistence
+CREATE TABLE trip (
+    id TEXT PRIMARY KEY NOT NULL,
+    startTimeUtc INTEGER NOT NULL,
+    distanceMeters REAL NOT NULL,
+    grossKwh REAL NOT NULL,
+    tractionKwh REAL NOT NULL,
+    climateKwh REAL NOT NULL,
+    climbKwh REAL NOT NULL,
+    regenKwh REAL NOT NULL
+);</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/logo.svg" alt="Exergy" width="200" height="34">
+          <p>
+            Granular EV consumption, thermodynamic energy attribution, and trip telemetry for Android Automotive OS and companion mobile apps.
+          </p>
+          <div style="margin-top: 16px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">
+            Domain: <code>exergy.science</code>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <ul class="footer-links">
+            <li><a href="#simulator">Flow Simulator</a></li>
+            <li><a href="#physics">Physics Engine</a></li>
+            <li><a href="#surfaces">Vehicle Screens</a></li>
+            <li><a href="#compatibility">Vehicle Matrix</a></li>
+            <li><a href="#architecture">Tech Stack</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Privacy &amp; Open Data</h5>
+          <ul class="footer-links">
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="#privacy">Local-First Protocol</a></li>
+            <li><a href="#privacy">Blind Cloud Relay</a></li>
+            <li><a href="#privacy">Open Data Exports</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Code &amp; Specs</h5>
+          <ul class="footer-links">
+            <li><a href="https://github.com/web-gears/exergy-web" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
+            <li><a href="https://github.com/web-gears/exergy-web/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a></li>
+            <li><a href="mailto:contact@exergy.science">contact@exergy.science</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Exergy Telemetry · exergy.science · Open-Source Automotive Software</div>
+        <div>ZERO TRACKING · ZERO ADS · LOCAL-FIRST BY DEFAULT</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- Exergy - Concept 1 (Monochrome / High-Contrast HUD Edition) -->
+  <rect width="512" height="512" fill="#000000" />
+  <rect x="0.5" y="0.5" width="511" height="511" stroke="#333333" stroke-width="1" />
+
+  <!-- Corner Ticks -->
+  <path d="M20 32 V20 H32 M480 20 H492 V32 M20 480 V492 H32 M492 480 V492 H480" stroke="#FFFFFF" stroke-width="2" />
+
+  <!-- Battery Spine -->
+  <rect x="88" y="88" width="68" height="108" fill="#FFFFFF" />
+  <rect x="88" y="202" width="68" height="108" fill="#FFFFFF" />
+  <rect x="88" y="316" width="68" height="108" fill="#FFFFFF" />
+  <rect x="88" y="196" width="68" height="6" fill="#000000" />
+  <rect x="88" y="310" width="68" height="6" fill="#000000" />
+
+  <!-- Traction Top Arm -->
+  <rect x="156" y="88" width="268" height="76" fill="#FFFFFF" />
+
+  <!-- Kinetic Drop & Mitre -->
+  <polygon points="364,164 424,164 424,220 364,280" fill="#FFFFFF" />
+  <polygon points="364,280 424,220 424,348 364,348" fill="#CCCCCC" />
+
+  <!-- Middle Arm (Pattern / Hatching for Monochrome Sinks) -->
+  <rect x="156" y="218" width="176" height="52" fill="#888888" />
+  <rect x="156" y="274" width="112" height="26" fill="#555555" />
+
+  <!-- Bottom Arm (Regen Loop) -->
+  <path d="M424 348 V424 H176 L156 386 L176 348 H364 Z" fill="#CCCCCC" />
+  <polygon points="156,386 182,364 182,408" fill="#000000" />
+</svg>

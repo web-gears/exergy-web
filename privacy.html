@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Exergy Telemetry (exergy.science)</title>
+  <meta name="description" content="Official Privacy Policy and Zero-Knowledge Data Sovereignty Specification for Exergy EV telemetry on Android Automotive OS and companion mobile apps.">
+  <link rel="canonical" href="https://exergy.science/privacy">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://exergy.science/privacy">
+  <meta property="og:title" content="Privacy Policy — Exergy Telemetry">
+  <meta property="og:description" content="Local-first data sovereignty, zero-knowledge E2EE sync, and automotive telemetry privacy specification.">
+  <meta property="og:image" content="https://exergy.science/assets/images/flow-car.jpg">
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <!-- Background Technical Drafting Grid -->
+  <div class="drafting-grid-bg" aria-hidden="true"></div>
+
+  <!-- Real-Time Telemetry Ticker -->
+  <aside class="telemetry-ticker" aria-label="Privacy Protocol Specification">
+    <div class="container">
+      <div class="ticker-left">
+        <span><span class="status-dot"></span>SOVEREIGNTY_LEVEL: LOCAL_FIRST</span>
+        <span><span class="ticker-tag">CIPHER:</span> <span class="ticker-val">XChaCha20-Poly1305</span></span>
+        <span><span class="ticker-tag">RELAY_STORAGE:</span> <span class="ticker-val">BLIND_MAILBOX</span></span>
+      </div>
+      <div class="ticker-right">
+        <span><span class="ticker-tag">DOMAIN:</span> <span class="ticker-val">exergy.science</span></span>
+        <span><span class="ticker-tag">AUTH_SERVER:</span> <span class="ticker-val">NONE (OPTICAL QR)</span></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Global Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo-link" aria-label="Exergy Homepage">
+        <img src="/assets/logo.svg" alt="Exergy Logo" width="210" height="36">
+      </a>
+      
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="/" class="nav-link">Overview</a>
+        <a href="/#simulator" class="nav-link">Simulator</a>
+        <a href="/#surfaces" class="nav-link">Surfaces</a>
+        <a href="/#architecture" class="nav-link">Architecture</a>
+        <a href="/privacy" class="nav-link active">Privacy Policy</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/web-gears/exergy-web" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="doc-page">
+    <div class="container">
+      <div class="doc-header">
+        <h1 class="hero-title" style="margin-bottom: var(--spacing-sm);">Privacy Policy &amp; Data Sovereignty Specification</h1>
+        <div class="doc-meta">
+          <span>SPEC_VERSION: 1.0.0</span>
+          <span>LAST_REVISED: November 2026</span>
+          <span>DOMAIN: exergy.science</span>
+          <span>AUTHORITY: Web Gears</span>
+        </div>
+      </div>
+
+      <div class="doc-content">
+        <!-- Sidebar Navigation -->
+        <aside class="doc-sidebar" aria-label="Privacy Sections">
+          <nav class="doc-nav">
+            <a href="#principles" class="active">1. Fundamental Axioms</a>
+            <a href="#signals">2. Automotive Signals</a>
+            <a href="#pairing">3. Optical Key Exchange</a>
+            <a href="#encryption">4. E2EE Cryptography</a>
+            <a href="#relay">5. Blind Cloud Relay</a>
+            <a href="#offline">6. Offline Wi-Fi Sync</a>
+            <a href="#exports">7. Data Portability</a>
+            <a href="#thirdparty">8. Third-Party Integrations</a>
+            <a href="#rights">9. User Rights (GDPR/CCPA)</a>
+            <a href="#contact">10. Inquiries &amp; Contact</a>
+          </nav>
+        </aside>
+
+        <!-- Main Document Body -->
+        <article class="doc-body">
+          <div class="doc-callout">
+            <strong>Exergy Executive Privacy Summary:</strong> 
+            We do not require accounts, usernames, emails, or phone numbers. 
+            Your vehicle is the sole authoritative database. 
+            All synchronization payloads are encrypted using authenticated XChaCha20-Poly1305 before leaving the vehicle. 
+            The relay server cannot read your routes, speeds, energy usage, battery status, or vehicle VIN. 
+            We never sell, monetize, or broker your vehicle telemetry.
+          </div>
+
+          <section id="principles" class="doc-section">
+            <h2>1. Fundamental Privacy Axioms</h2>
+            <p>
+              Most automotive telemetry platforms require cloud accounts, transmit unencrypted GPS and battery traces to corporate data centers, and monetize user driving profiles for insurance underwriting or behavioral targeting.
+            </p>
+            <p>
+              <strong>Exergy</strong> operates on fundamentally different architectural and cryptographic axioms:
+            </p>
+            <ul>
+              <li><strong>Zero Account Required:</strong> The in-vehicle application operates with zero registration, zero email verification, zero passwords, and zero mandatory internet connectivity.</li>
+              <li><strong>The Vehicle is Data Sovereign:</strong> The primary authoritative database is stored in SQLite format directly on the vehicle's internal flash storage.</li>
+              <li><strong>End-to-End Encryption by Default:</strong> When synchronization with companion mobile phones is enabled, all payloads are encrypted in vehicle memory before transmission.</li>
+              <li><strong>Blind Cloud Relay:</strong> Any cloud relay infrastructure is operated strictly as an untrusted, blind mailbox. The server has no technical capability to decrypt or inspect payloads.</li>
+              <li><strong>No Commercial Profiling:</strong> We do not track users, build behavioral profiles, or sell telemetry data to third parties under any circumstances.</li>
+            </ul>
+          </section>
+
+          <section id="signals" class="doc-section">
+            <h2>2. Automotive Signals &amp; Telemetry Processed</h2>
+            <p>
+              Exergy accesses vehicle properties via the official Android Automotive OS Car API (<code>CarPropertyManager</code>). All processing occurs locally within the isolated application sandbox on the vehicle:
+            </p>
+            <ul>
+              <li><strong>Vehicle Speed &amp; Dynamics:</strong> Read via <code>PERF_VEHICLE_SPEED</code> and <code>GEAR_SELECTION</code> at 10 Hz, downsampled to 1 Hz for trip analysis.</li>
+              <li><strong>High-Voltage Battery Telemetry:</strong> Instantaneous voltage, instantaneous current, state-of-charge (SoC), and pack energy capacity via <code>EV_BATTERY_LEVEL</code> and <code>EV_CURRENT_BATTERY_CAPACITY</code>.</li>
+              <li><strong>Environmental Temperature:</strong> Ambient outdoor temperature via <code>ENV_OUTSIDE_TEMPERATURE</code>, used to calculate air density ($\rho$) corrections and HVAC thermodynamic heating coefficients.</li>
+              <li><strong>Climate Conditioning State:</strong> HVAC system power draw via <code>HVAC_POWER_ON</code> and thermal blower state to isolate cabin comfort energy from mechanical propulsion.</li>
+              <li><strong>Geolocation &amp; Elevation:</strong> Android Location Services GPS coordinates and barometric elevation data, used strictly to compute gravitational potential climb work ($m g \Delta h$) and map trip segments.</li>
+            </ul>
+            <p>
+              <strong>Storage Location:</strong> All recorded telemetry resides in a private SQLite database inside the app sandbox (<code>/data/data/com.exergyapp/databases/exergy.db</code>). No other application on the vehicle has access to these records.
+            </p>
+          </section>
+
+          <section id="pairing" class="doc-section">
+            <h2>3. Optical QR Code Key Exchange (In-Cabin Ceremony)</h2>
+            <p>
+              Traditional applications require entering user credentials that authenticate against a remote identity provider. Exergy replaces this with an optical in-cabin key exchange:
+            </p>
+            <ul>
+              <li>When pairing is initiated, the vehicle must be physically stationary in <strong>PARK</strong>.</li>
+              <li>The vehicle generates a cryptographically secure 256-bit symmetric Pre-Shared Key ($K_{\text{shared}}$) using a cryptographically secure pseudorandom number generator (CSPRNG).</li>
+              <li>The vehicle generates an ephemeral Ed25519 keypair and calculates a blind mailbox identifier: <code>BLAKE3(PublicKey)</code>.</li>
+              <li>The vehicle renders a high-density optical QR code on the central infotainment display:
+                <pre class="code-block" style="margin: 8px 0;">exergy://pair?v=1&amp;box=&lt;blind_mailbox_id&gt;&amp;k=&lt;base64_psk&gt;&amp;relay=https://relay.exergy.science</pre>
+              </li>
+              <li>The companion phone camera scans the QR code directly. The shared key is committed to the mobile device's hardware-backed keystore (Android Keystore with StrongBox or iOS Keychain with Secure Enclave).</li>
+              <li><strong>Zero bytes are transmitted over the internet during the pairing process.</strong> The secret key never touches any server.</li>
+            </ul>
+          </section>
+
+          <section id="encryption" class="doc-section">
+            <h2>4. Cryptographic Envelope &amp; E2EE Protocol</h2>
+            <p>
+              All synchronization chunks between the vehicle and companion mobile applications are encapsulated using authenticated encryption:
+            </p>
+            <ul>
+              <li><strong>Cipher:</strong> <code>XChaCha20-Poly1305</code> (AEAD with 192-bit extended random nonce).</li>
+              <li><strong>Replay &amp; Nonce Protection:</strong> The 192-bit CSPRNG-generated nonce ensures that nonce collision probability is cryptographically negligible, even across millions of synchronization chunks generated without central clock coordination.</li>
+              <li><strong>Integrity Verification:</strong> A 16-byte Poly1305 MAC tag guarantees that any altered or corrupted ciphertext blob is rejected immediately before decryption.</li>
+            </ul>
+          </section>
+
+          <section id="relay" class="doc-section">
+            <h2>5. Blind Cloud Relay Operations &amp; Data Retention</h2>
+            <p>
+              When remote synchronization is enabled over cellular networks:
+            </p>
+            <ul>
+              <li>The vehicle pushes encrypted binary blobs to an endpoint: <code>https://relay.exergy.science/v1/mailbox/&lt;mailbox_id&gt;/message</code>.</li>
+              <li>The relay server operates blindly: it stores only the <code>mailbox_id</code> (a one-way BLAKE3 hash), the ciphertext blob, and a monotonic sequence counter.</li>
+              <li><strong>Zero Knowledge:</strong> The relay operator cannot determine the driver's identity, vehicle VIN, GPS tracks, origin, destination, vehicle speed, battery state, or charging habits.</li>
+              <li><strong>Strict Ephemeral Retention:</strong> Ciphertext messages are automatically deleted from the relay mailbox immediately upon receipt of an authenticated client acknowledgement, or pruned unconditionally after <strong>14 days</strong>.</li>
+            </ul>
+          </section>
+
+          <section id="offline" class="doc-section">
+            <h2>6. 100% Offline Cabin Wi-Fi Direct Sync</h2>
+            <p>
+              Users who prefer not to utilize any cloud relay infrastructure may select local-only sync:
+            </p>
+            <ul>
+              <li>When the companion phone is connected to the vehicle's in-car Wi-Fi hotspot, Exergy discovers the vehicle service using multicast DNS (mDNS: <code>_exergy-sync._tcp.local</code>).</li>
+              <li>A direct, local TLS 1.3 socket is established between the phone and the vehicle head unit, pinned to the paired public key.</li>
+              <li>All trip records and high-frequency telemetry synchronize directly over the vehicle cabin network at local Wi-Fi speeds.</li>
+              <li><strong>Zero bytes leave the physical vehicle cabin.</strong> No cloud servers or internet connections are involved.</li>
+            </ul>
+          </section>
+
+          <section id="exports" class="doc-section">
+            <h2>7. Open Data Architecture &amp; User Portability</h2>
+            <p>
+              We firmly reject proprietary data silos. All collected data belongs unconditionally to the vehicle owner:
+            </p>
+            <ul>
+              <li><strong>CSV Export:</strong> Second-by-second 1 Hz telemetry and per-trip summaries compatible with spreadsheets, Python pandas, and data science tooling.</li>
+              <li><strong>JSON Schema:</strong> Full hierarchical object graphs including physical aerodynamic attribution, rolling resistance values, and HVAC thermal splits.</li>
+              <li><strong>Enhanced GPX:</strong> Standard GPS Exchange Format tracks augmented with custom XML extensions recording power, efficiency, and elevation for spatial GIS analysis.</li>
+            </ul>
+          </section>
+
+          <section id="thirdparty" class="doc-section">
+            <h2>8. Optional Third-Party Integrations</h2>
+            <p>
+              Exergy offers optional integrations with external services. These features are strictly opt-in and disabled by default:
+            </p>
+            <ul>
+              <li><strong>A Better Routeplanner (ABRP):</strong> If enabled, Exergy forwards instantaneous battery SoC, speed, and charging power to the official Iternio ABRP Telemetry API using a user-provided API token. Data transmission is subject to Iternio's privacy policy.</li>
+              <li><strong>Home Assistant (MQTT / Webhook):</strong> If enabled, Exergy publishes vehicle arrival and battery state to the user's private local Home Assistant instance for solar charging automation. All credentials and network targets remain local to the user's network.</li>
+            </ul>
+          </section>
+
+          <section id="rights" class="doc-section">
+            <h2>9. User Rights (GDPR, CCPA/CPRA, Global Compliance)</h2>
+            <p>
+              Under global privacy frameworks including the General Data Protection Regulation (GDPR) and California Consumer Privacy Act (CCPA/CPRA):
+            </p>
+            <ul>
+              <li><strong>Right to Access &amp; Portability:</strong> You can export 100% of your records at any time from the vehicle or mobile companion in open formats.</li>
+              <li><strong>Right to Erasure (De-Identification):</strong> You may purge all historical trips, charging curves, and paired device associations with one tap in vehicle settings (<code>Settings &gt; Storage &gt; Factory Reset Database</code>). This writes zeroes to the local SQLite database files.</li>
+              <li><strong>No Data Sales:</strong> Exergy does not sell, license, or transfer personal or vehicle data to third-party data brokers, insurers, vehicle OEMs, or ad exchanges.</li>
+            </ul>
+          </section>
+
+          <section id="contact" class="doc-section">
+            <h2>10. Inquiries &amp; Cryptographic Audit Inquiries</h2>
+            <p>
+              For legal questions, cryptographic protocol reviews, or data sovereignty inquiries, contact our team:
+            </p>
+            <div class="code-block" style="margin-top: 12px;">
+Domain: exergy.science
+Email:  privacy@exergy.science
+Web:    https://exergy.science/privacy
+GitHub: https://github.com/web-gears/exergy-web</div>
+          </section>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/assets/logo.svg" alt="Exergy" width="200" height="34">
+          <p>
+            Granular EV consumption, thermodynamic energy attribution, and trip telemetry for Android Automotive OS and companion mobile apps.
+          </p>
+          <div style="margin-top: 16px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">
+            Domain: <code>exergy.science</code>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <ul class="footer-links">
+            <li><a href="/#simulator">Flow Simulator</a></li>
+            <li><a href="/#physics">Physics Engine</a></li>
+            <li><a href="/#surfaces">Vehicle Screens</a></li>
+            <li><a href="/#compatibility">Vehicle Matrix</a></li>
+            <li><a href="/#architecture">Tech Stack</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Privacy &amp; Open Data</h5>
+          <ul class="footer-links">
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/#privacy">Local-First Protocol</a></li>
+            <li><a href="/#privacy">Blind Cloud Relay</a></li>
+            <li><a href="/#privacy">Open Data Exports</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Code &amp; Specs</h5>
+          <ul class="footer-links">
+            <li><a href="https://github.com/web-gears/exergy-web" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
+            <li><a href="https://github.com/web-gears/exergy-web/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a></li>
+            <li><a href="mailto:privacy@exergy.science">privacy@exergy.science</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Exergy Telemetry · exergy.science · Open-Source Automotive Software</div>
+        <div>ZERO TRACKING · ZERO ADS · LOCAL-FIRST BY DEFAULT</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
