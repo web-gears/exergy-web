@@ -30,6 +30,7 @@ jobs:
           git add data/chargers/
           if ! git diff --cached --quiet; then
             git commit -m "data(chargers): automated weekly EV POI database refresh"
+            git pull --rebase origin main
             git push
           else
             echo "No changes to commit."

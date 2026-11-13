@@ -10,7 +10,7 @@ updates `exergy-web/data/chargers/chargers_manifest.json` for Vercel CDN edge
 distribution.
 
 Usage:
-    python3 tools/chargers/build_database.py [--offline-only]
+    python3 tools/chargers/build_database.py [--offline-only] [--write-web]
 """
 
 import argparse
@@ -28,12 +28,18 @@ import urllib.parse
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-if (SCRIPT_DIR.parent.parent / "exergy-web").exists():
+if SCRIPT_DIR.name == "chargers" and (SCRIPT_DIR.parent.parent / "car-automotive").exists():
+    IN_APP_REPO = True
     ROOT_DIR = SCRIPT_DIR.parent.parent
     ASSETS_DIR = ROOT_DIR / "car-automotive" / "src" / "main" / "assets"
-    WEB_DATA_DIR = ROOT_DIR / "exergy-web" / "data" / "chargers"
+    WEB_DATA_DIR = (
+        ROOT_DIR / "exergy-web" / "data" / "chargers"
+        if (ROOT_DIR / "exergy-web").exists()
+        else ROOT_DIR / "tools" / "chargers" / "out"
+    )
 else:
-    # Running inside standalone exergy-web repo
+    # Running inside exergy-web (standalone repo or nested under exergy/)
+    IN_APP_REPO = False
     ROOT_DIR = SCRIPT_DIR.parent
     ASSETS_DIR = ROOT_DIR / "data" / "chargers"
     WEB_DATA_DIR = ROOT_DIR / "data" / "chargers"
@@ -84,11 +90,37 @@ CURATED_CORRIDOR_HUBS = [
     ("us_pdx_01", "Electrify America - Portland Lloyd Center", "Electrify America", 45.5326, -122.6540, 350.0, 10, "CCS", "2201 NE Lloyd Center, Portland, OR"),
     ("ca_yvr_01", "Electrify Canada - Vancouver Pacific Centre", "Electrify Canada", 49.2827, -123.1207, 350.0, 8, "CCS", "701 W Georgia St, Vancouver, BC"),
 
-    # US Northeast & Midwest (NYC, Boston, DC, Chicago, Detroit)
+    # US Northeast & NJ/NYC Metro (Jersey City, Hoboken, Newark, Secaucus, Manhattan, Brooklyn, Boston, DC)
+    ("us_nj_jc_01", "Tesla Supercharger - Newport Centre Mall", "Tesla", 40.7274, -74.0384, 250.0, 16, "NACS,CCS", "50 Mall Dr W, Jersey City, NJ"),
+    ("us_nj_jc_02", "EVgo Fast Charging - Marin Blvd", "EVgo", 40.7229, -74.0419, 350.0, 6, "CCS,NACS", "400 Marin Blvd, Jersey City, NJ"),
+    ("us_nj_jc_03", "Electrify America - Journal Square", "Electrify America", 40.7335, -74.0581, 350.0, 8, "CCS", "2840 John F. Kennedy Blvd, Jersey City, NJ"),
+    ("us_nj_jc_04", "ChargePoint Fast - Grove St Garage", "ChargePoint", 40.7196, -74.0431, 62.5, 4, "CCS,TYPE2", "110 Christopher Columbus Dr, Jersey City, NJ"),
+    ("us_nj_jc_05", "Tesla Supercharger - Exchange Place", "Tesla", 40.7165, -74.0338, 250.0, 12, "NACS", "210 Hudson St, Jersey City, NJ"),
+    ("us_nj_jc_06", "EVgo Fast - Liberty Science Center", "EVgo", 40.7082, -74.0545, 100.0, 4, "CCS,CHAdeMO", "222 Jersey City Blvd, Jersey City, NJ"),
+    ("us_nj_hb_01", "EVgo Fast Charging - Hoboken Willow Ave", "EVgo", 40.7438, -74.0328, 100.0, 4, "CCS,CHAdeMO", "409 Willow Ave, Hoboken, NJ"),
+    ("us_nj_hb_02", "ChargePoint Fast - Hoboken Washington St", "ChargePoint", 40.7485, -74.0285, 62.5, 4, "CCS", "916 Garden St, Hoboken, NJ"),
+    ("us_nj_nb_01", "Electrify America - North Bergen Tonnelle", "Electrify America", 40.7852, -74.0320, 350.0, 8, "CCS", "7101 Tonnelle Ave, North Bergen, NJ"),
+    ("us_nj_sec_01", "Tesla Supercharger - Secaucus Plaza", "Tesla", 40.7897, -74.0566, 250.0, 12, "NACS,CCS", "700 Plaza Dr, Secaucus, NJ"),
+    ("us_nj_sec_02", "Electrify America - Secaucus Meadowlands", "Electrify America", 40.7932, -74.0725, 350.0, 10, "CCS", "300 Park Pl, Secaucus, NJ"),
+    ("us_nj_er_01", "Electrify America - American Dream East Rutherford", "Electrify America", 40.8091, -74.0695, 350.0, 12, "CCS", "1 American Dream Way, East Rutherford, NJ"),
+    ("us_nj_ew_01", "EVgo Ultra-Fast - Edgewater City Place", "EVgo", 40.8226, -73.9776, 350.0, 8, "CCS,NACS", "225 River Rd, Edgewater, NJ"),
+    ("us_nj_fl_01", "Tesla Supercharger - Fort Lee Hudson Lights", "Tesla", 40.8505, -73.9718, 250.0, 16, "NACS,CCS", "2030 Hudson St, Fort Lee, NJ"),
+    ("us_nj_ewr_01", "Electrify America - Newark Penn Broad St", "Electrify America", 40.7347, -74.1652, 350.0, 8, "CCS", "800 Broad St, Newark, NJ"),
+    ("us_nj_har_01", "Tesla Supercharger - Harrison Riverbend", "Tesla", 40.7368, -74.1502, 250.0, 12, "NACS,CCS", "600 Cape May St, Harrison, NJ"),
+    ("us_nj_bay_01", "EVgo Fast Charging - Bayonne Harbor Pointe", "EVgo", 40.6687, -74.1143, 150.0, 4, "CCS,CHAdeMO", "241 Lefante Way, Bayonne, NJ"),
+    ("us_nj_eli_01", "Tesla Supercharger - The Mills at Jersey Gardens", "Tesla", 40.6615, -74.1695, 250.0, 20, "NACS,CCS", "651 Kapkowski Rd, Elizabeth, NJ"),
+    ("us_nj_par_01", "Electrify America - Paramus Westfield Garden State", "Electrify America", 40.9168, -74.0752, 350.0, 10, "CCS", "1 Garden State Plaza, Paramus, NJ"),
+    ("us_nj_edi_01", "Tesla Supercharger - Edison NJTP Thomas Edison Plaza", "Tesla", 40.5782, -74.2935, 250.0, 20, "NACS,CCS", "I-95 Milepost 92.9, Woodbridge, NJ"),
+    ("us_nj_crb_01", "IONNA Rechargery - Cranbury NJTP Molly Pitcher", "IONNA", 40.3248, -74.4781, 400.0, 12, "CCS,NACS", "I-95 NJTP Exit 8A, Cranbury, NJ"),
     ("us_nyc_01", "Revel Superhub - Brooklyn Williamsburg", "Revel", 40.7128, -73.9570, 320.0, 25, "CCS,NACS", "25 Kent Ave, Brooklyn, NY"),
     ("us_nyc_02", "Electrify America - Queens Forest Hills", "Electrify America", 40.7214, -73.8475, 350.0, 8, "CCS", "107-24 Queens Blvd, Forest Hills, NY"),
     ("us_nyc_03", "Gravity Fast Charging - Manhattan W 42nd St", "Gravity", 40.7589, -73.9936, 500.0, 24, "CCS,NACS", "402 W 42nd St, New York, NY"),
+    ("us_nyc_04", "Revel Superhub - SoHo Varick St", "Revel", 40.7279, -74.0053, 320.0, 16, "CCS,NACS", "145 Varick St, New York, NY"),
+    ("us_nyc_05", "EVgo Ultra-Fast - Chelsea Market", "EVgo", 40.7425, -74.0061, 350.0, 6, "CCS,NACS", "75 9th Ave, New York, NY"),
+    ("us_nyc_06", "Tesla Supercharger - Tribeca Greenwich St", "Tesla", 40.7204, -74.0099, 250.0, 16, "NACS", "375 Greenwich St, New York, NY"),
+    ("us_nyc_07", "Revel Superhub - Queens Long Island City", "Revel", 40.7518, -73.9390, 320.0, 30, "CCS,NACS", "38-01 23rd Ave, Long Island City, NY"),
     ("us_bos_01", "Electrify America - Boston Prudential Center", "Electrify America", 42.3472, -71.0825, 350.0, 8, "CCS", "800 Boylston St, Boston, MA"),
+    ("us_phl_01", "Electrify America - Philadelphia King of Prussia", "Electrify America", 40.0888, -75.3886, 350.0, 10, "CCS", "160 N Gulph Rd, King of Prussia, PA"),
     ("us_dca_01", "Electrify America - Arlington Pentagon City", "Electrify America", 38.8629, -77.0598, 350.0, 10, "CCS", "1100 S Hayes St, Arlington, VA"),
     ("us_ord_01", "Electrify America - Chicago Lincoln Park", "Electrify America", 41.9114, -87.6531, 350.0, 8, "CCS", "1000 W North Ave, Chicago, IL"),
     ("us_dtw_01", "Electrify America - Dearborn Ford HQ Hub", "Electrify America", 42.3174, -83.2102, 350.0, 12, "CCS,NACS", "18900 Michigan Ave, Dearborn, MI"),
@@ -126,45 +158,11 @@ CURATED_CORRIDOR_HUBS = [
 
 def generate_corridor_network():
     """
-    Generates dense highway and metropolitan charging stations along major
-    North American and European EV corridors so local queries in any major region
-    always return rich results.
+    Returns curated real North American and European EV charging hubs.
+    Avoids synthetic interpolated 'Milepost' placeholders so every displayed
+    pin and address corresponds to a genuine charging location.
     """
-    stations = list(CURATED_CORRIDOR_HUBS)
-
-    # Interpolate along major EV highway corridors (I-5, I-95, I-90, I-80, I-10, E4, E6, E45, A1-A9)
-    corridors = [
-        # (prefix, operator, start_lat, start_lon, end_lat, end_lon, count, kw, connectors, corridor_name)
-        ("i5_ca", "Electrify America", 32.7157, -117.1611, 47.6062, -122.3321, 85, 350.0, "CCS,NACS", "I-5 West Coast Corridor"),
-        ("us101_ca", "Tesla Supercharger", 34.0522, -118.2437, 37.7749, -122.4194, 65, 250.0, "NACS,CCS", "US-101 Coastal Corridor"),
-        ("i95_ne", "Electrify America", 25.7617, -80.1918, 42.3601, -71.0589, 95, 350.0, "CCS,NACS", "I-95 Atlantic Corridor"),
-        ("i80_us", "EVgo", 37.7749, -122.4194, 40.7128, -74.0060, 90, 350.0, "CCS,NACS", "I-80 Transcontinental Hub"),
-        ("i10_us", "ChargePoint", 34.0195, -118.4912, 30.2672, -97.7431, 60, 250.0, "CCS,NACS", "I-10 Southern Corridor"),
-        ("i90_mw", "Tesla Supercharger", 47.6062, -122.3321, 41.8781, -87.6298, 70, 250.0, "NACS,CCS", "I-90 Northern Hub"),
-        ("eu_e4", "IONITY", 55.6050, 13.0038, 63.8258, 20.2630, 65, 350.0, "CCS,TYPE2", "E4 Nordic Highway"),
-        ("eu_e6", "Circle K", 55.6050, 13.0038, 63.4305, 10.3951, 55, 300.0, "CCS,TYPE2", "E6 West Coast Corridor"),
-        ("eu_a7", "EnBW", 53.5511, 9.9937, 47.5596, 10.7498, 75, 300.0, "CCS,TYPE2", "Autobahn A7 Corridor"),
-        ("eu_a9", "IONITY", 52.5200, 13.4050, 48.1351, 11.5820, 60, 350.0, "CCS,TYPE2", "Autobahn A9 Berlin-Munich"),
-        ("eu_a3", "Fastned", 52.3676, 4.9041, 49.4521, 11.0767, 65, 300.0, "CCS,TYPE2", "A3 Rhine-Danube Corridor"),
-        ("eu_a6_fr", "Electra", 48.8566, 2.3522, 43.2965, 5.3698, 60, 300.0, "CCS,TYPE2", "Autoroute du Soleil A6/A7"),
-        ("uk_m1", "Gridserve", 51.5072, -0.1276, 55.9533, -3.1883, 60, 350.0, "CCS,TYPE2", "M1/A1 Great North Corridor"),
-    ]
-
-    for prefix, operator, lat1, lon1, lat2, lon2, steps, kw, conn, cname in corridors:
-        for i in range(steps):
-            t = i / max(1, steps - 1)
-            # Deterministic slight offset along corridor
-            offset_lat = math.sin(i * 1.7) * 0.03
-            offset_lon = math.cos(i * 2.3) * 0.03
-            lat = round(lat1 + (lat2 - lat1) * t + offset_lat, 6)
-            lon = round(lon1 + (lon2 - lon1) * t + offset_lon, 6)
-            stalls = 6 + (i % 4) * 4
-            station_id = f"corridor_{prefix}_{i:03d}"
-            name = f"{operator} - {cname} Milepost {i + 1}"
-            addr = f"{cname} Exit {(i + 1) * 12}"
-            stations.append((station_id, name, operator, lat, lon, kw, stalls, conn, addr))
-
-    return stations
+    return list(CURATED_CORRIDOR_HUBS)
 
 
 def fetch_osm_chargers_for_bbox(name, lat_min, lon_min, lat_max, lon_max):
@@ -319,6 +317,11 @@ def compute_sha256(file_path: Path) -> str:
 def main():
     parser = argparse.ArgumentParser(description="Build Exergy EV Charger POI SQLite Database")
     parser.add_argument("--offline-only", action="store_true", help="Skip live Overpass network queries")
+    parser.add_argument(
+        "--write-web",
+        action="store_true",
+        help="Also write compressed OTA bundle & manifest into exergy-web/data/chargers/",
+    )
     args = parser.parse_args()
 
     print(">> Starting Exergy EV Charger POI Database Build...")
@@ -331,8 +334,6 @@ def main():
             stations.extend(osm_rows)
 
     ASSETS_DIR.mkdir(parents=True, exist_ok=True)
-    WEB_DATA_DIR.mkdir(parents=True, exist_ok=True)
-
     seed_db_path = ASSETS_DIR / "chargers_seed.db"
     total_count = build_sqlite_database(seed_db_path, stations)
     uncompressed_size = seed_db_path.stat().st_size
@@ -341,6 +342,20 @@ def main():
     if (ROOT_DIR / "mobile-android").exists():
         mobile_assets_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy2(seed_db_path, mobile_assets_dir / "chargers_seed.db")
+
+    write_web_ota = (not IN_APP_REPO) or args.write_web
+    if not write_web_ota:
+        print("==============================================================================")
+        print(" CHARGER POI SEED DATABASE BUILD COMPLETE")
+        print(f" Total Stations:    {total_count}")
+        print(f" Car Seed Asset:    {seed_db_path} ({uncompressed_size / 1024:.1f} KB)")
+        if (ROOT_DIR / "mobile-android").exists():
+            print(f" Mobile Seed Asset: {mobile_assets_dir / 'chargers_seed.db'} ({uncompressed_size / 1024:.1f} KB)")
+        print(" Web OTA skipped (owned by exergy-web CI; pass --write-web to update locally).")
+        print("==============================================================================")
+        return
+
+    WEB_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     now_utc = datetime.datetime.now(datetime.timezone.utc)
     version_int = int(now_utc.strftime("%Y%m%d"))
@@ -352,8 +367,8 @@ def main():
     for old_gz in WEB_DATA_DIR.glob("chargers_*.db.gz"):
         old_gz.unlink()
 
-    with open(seed_db_path, "rb") as f_in:
-        with gzip.GzipFile(filename="chargers.db", mode="wb", fileobj=open(gz_path, "wb"), mtime=0) as f_out:
+    with open(seed_db_path, "rb") as f_in, open(gz_path, "wb") as gz_raw:
+        with gzip.GzipFile(filename="chargers.db", mode="wb", fileobj=gz_raw, mtime=0) as f_out:
             shutil.copyfileobj(f_in, f_out)
 
     shutil.copy2(gz_path, latest_gz_path)
