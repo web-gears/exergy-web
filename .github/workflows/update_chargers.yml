@@ -1,0 +1,36 @@
+name: Update EV Charger POI Database (Weekly)
+
+on:
+  schedule:
+    - cron: '0 2 * * 0'  # Every Sunday at 02:00 UTC
+  workflow_dispatch:      # Manual 1-click trigger in GitHub Actions UI
+
+jobs:
+  update-chargers-db:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build fresh EV Charger SQLite database & manifest
+        run: python3 tools/build_database.py
+
+      - name: Commit and push updated database & manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/chargers/
+          if ! git diff --cached --quiet; then
+            git commit -m "data(chargers): automated weekly EV POI database refresh"
+            git push
+          else
+            echo "No changes to commit."
+          fi
