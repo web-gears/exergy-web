@@ -1,11 +1,11 @@
 {
-  "version": 20261113,
+  "version": 20261115,
   "min_app_version": 20010,
-  "published_at": "2026-11-13T03:49:04Z",
-  "download_url": "https://exergy.science/data/chargers/chargers_20261113.db.gz",
+  "published_at": "2026-11-15T08:51:57Z",
+  "download_url": "https://exergy.science/data/chargers/chargers_20261115.db.gz",
   "fallback_url": "https://exergy.science/data/chargers/chargers_latest.db.gz",
-  "sha256": "1ecad1233d0e9330e11859ce85f313b02e6b079f7525060a64a666afa0fba617",
-  "size_compressed_bytes": 7740,
+  "sha256": "9513db168278e8795172af2a1159a3b684cf407c5beb3788877ddc9d14893bcb",
+  "size_compressed_bytes": 7645,
   "size_uncompressed_bytes": 32768,
   "station_count": 82
 }
